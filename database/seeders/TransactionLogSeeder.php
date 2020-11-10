@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\ForceGateway;
+use App\Models\TransactionLog;
 use Illuminate\Database\Seeder;
 
-class ForceGatewaySeeder extends Seeder
+class TransactionLogSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,6 +14,6 @@ class ForceGatewaySeeder extends Seeder
      */
     public function run()
     {
-        ForceGateway::factory(2);
+        TransactionLog::factory(20);
     }
 }
