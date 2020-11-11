@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ForceGateway extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'gateway',
+        'source',
+    ];
 }
