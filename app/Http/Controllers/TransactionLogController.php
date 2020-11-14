@@ -63,7 +63,7 @@ class TransactionLogController extends Controller
         try {
             $insertResult = TransactionLog::query()->create($data);
         } catch (\Exception $e) {
-            return response()->json([self::BODY => null, self::MESSAGE => ــ('messages.public_error')])->setStatusCode(400);
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }
         dd($insertResult['id'],$insertResult['final_gateway'],$insertResult);
 
