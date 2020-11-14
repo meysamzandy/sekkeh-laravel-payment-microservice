@@ -34,7 +34,6 @@ class TransactionLogController extends Controller
         if ($dataValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $dataValidator->errors()])->setStatusCode(400);
         }
-
         if (!$request->filled('token')) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.tokenValueNotExist')])->setStatusCode(400);
         }
@@ -50,16 +49,16 @@ class TransactionLogController extends Controller
         if ($tokenValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenValidator->errors()])->setStatusCode(400);
         }
-
         $final_gateway = ForceGateway::query()->where('source',$tokenValidator->validated()['src'])->first('gateway');
+
+
         $data = [
                 'sales_id' => $tokenValidator->validated()['factorId'],
                 'price' => $tokenValidator->validated()['finalPrice'],
                 'source' => $tokenValidator->validated()['src'],
                 'selected_gateway' => $dataValidator->validated()['gateway'],
-                'final_gateway' => $final_gateway['gateway'] ?: $dataValidator->validated()['gateway'],
+                'final_gateway' => $final_gateway ? $final_gateway['gateway']: $dataValidator->validated()['gateway'],
         ];
-
         try {
             $insertResult = TransactionLog::query()->create($data);
         } catch (\Exception $e) {
