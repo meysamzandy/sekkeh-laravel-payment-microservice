@@ -23,12 +23,12 @@ class SamanCallBack
         $saman = (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')));
         $calBackData = $request->post();
 
-        // check if has SaleOrderId
-        if (!$request->filled('SaleOrderId')) {
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFoundSaleOrderId')])->setStatusCode(400);
+        // check if has ResNum
+        if (!$request->filled('ResNum')) {
+            return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFoundResNum')])->setStatusCode(400);
         }
 
-        $transactions = TransactionLog::query()->findOrFail($calBackData['SaleOrderId']);
+        $transactions = TransactionLog::query()->findOrFail($calBackData['ResNum']);
         /** @var TransactionLog $transactions */
         if (!$transactions) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFound')])->setStatusCode(404);
@@ -43,7 +43,7 @@ class SamanCallBack
         }
 
         try {
-            $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['SaleReferenceId']]);
+            $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['TRACENO']]);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData,$calBackData);
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.success')])->setStatusCode(200);

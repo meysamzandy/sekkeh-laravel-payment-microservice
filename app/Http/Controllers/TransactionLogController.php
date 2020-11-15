@@ -72,7 +72,6 @@ class TransactionLogController extends Controller
                     ->startPayment($insertResult['price'],$insertResult['id']);
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }
 
