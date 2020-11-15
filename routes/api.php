@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ForceGatewayController;
 use App\Http\Controllers\MellatCallBack;
 use App\Http\Controllers\SamanCallBack;
 use App\Http\Controllers\TransactionLogController;
@@ -30,5 +31,7 @@ Route::any('payment/saman/callback', [SamanCallBack::class,'callBack'])->name('s
 Route::group(['prefix' => '/admin/sekkeh/',  'middleware' => ['adminToken']], function()
 {
     Route::get('list/transactions', [TransactionLogController::class,'list'] );
+
+    Route::get('list/forceGateways', [ForceGatewayController::class,'list'] );
 
 });
