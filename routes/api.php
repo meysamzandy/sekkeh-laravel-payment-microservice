@@ -25,3 +25,10 @@ Route::post('payment/request', [TransactionLogController::class, 'paymentRequest
 
 Route::any('payment/mellat/callback', [MellatCallBack::class,'callBack'])->name('mellat_callback');
 Route::any('payment/saman/callback', [SamanCallBack::class,'callBack'])->name('saman_callback');
+
+
+Route::group(['prefix' => '/admin/sekkeh/',  'middleware' => ['adminToken']], function()
+{
+    Route::get('list/transactions', [TransactionLogController::class,'list'] );
+
+});

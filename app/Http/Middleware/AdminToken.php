@@ -24,10 +24,10 @@ class AdminToken
 //        dd($jwt);
         $password = config('settings.admin_jwt.password');
 
-        $token = JwtHelper::decodeJwt(config('settings.admin_jwt.key'), $request->header('token'));
         if (!$request->header('token')) {
             return response()->json([__('messages.tokenIsNotValid')])->setStatusCode(403);
         }
+        $token = JwtHelper::decodeJwt(config('settings.admin_jwt.key'), $request->header('token'));
         if (!$token['result_status']) {
             return response()->json([$token['result']])->setStatusCode(403);
         }

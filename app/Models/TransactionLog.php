@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Schema;
 
 class TransactionLog extends Model
 {
@@ -24,4 +25,12 @@ class TransactionLog extends Model
         'transaction_id',
         'error_message'
     ];
+
+    /**
+     * @return array|string[]
+     */
+    public function getParams(): array
+    {
+        return Schema::getColumnListing('transaction_logs');
+    }
 }

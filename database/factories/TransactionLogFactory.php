@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\c;
+use App\Models\TransactionLog;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TransactionLogFactory extends Factory
@@ -12,7 +12,7 @@ class TransactionLogFactory extends Factory
      *
      * @var string
      */
-    protected $model = c::class;
+    protected $model = TransactionLog::class;
 
     /**
      * Define the model's default state.
