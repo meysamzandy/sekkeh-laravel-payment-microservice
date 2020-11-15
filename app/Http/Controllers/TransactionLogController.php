@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Helper\JwtHelper;
+use App\Http\Helper\MellatGateway;
 use App\Http\Helper\ValidatorHelper;
 use App\Models\ForceGateway;
 use App\Models\TransactionLog;
@@ -61,11 +62,11 @@ class TransactionLogController extends Controller
         ];
         try {
             $insertResult = TransactionLog::query()->create($data);
+            return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
+                ->startPayment($insertResult['price'],$insertResult['id']);
         } catch (\Exception $e) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }
-        dd($insertResult['id'],$insertResult['final_gateway'],$insertResult);
-
 
     }
 }
