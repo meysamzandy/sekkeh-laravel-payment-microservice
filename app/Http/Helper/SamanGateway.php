@@ -40,11 +40,12 @@ class SamanGateway
      */
     public function startPayment($ticket_price, $orderId): string
     {
-        $RedirectURL 	=  config('settings.saman.callback');
+
+        $callBackUrl =  config('settings.saman.callback');
         $SoapClient = new SoapClient('https://sep.shaparak.ir/payments/initpayment.asmx?wsdl', ['encoding' => 'UTF-8']);
         $Token = $SoapClient->RequestToken($this->MerchantCode, $orderId, $ticket_price);
         if (!empty($Token) && strlen($Token) > 10) {
-            $this->postToken($RedirectURL, $Token);
+            $this->postToken($callBackUrl, $Token);
         }
         return $this->error($Token);
     }
@@ -58,11 +59,10 @@ class SamanGateway
         $data = null;
         $ResCode = $params['StateCode']; // status code $StateCode
         $RefId = $params['RefNum']; // bank reference id equal to $RefNum
-        $merchant = $this->MerchantCode;
         if (isset($RefId)) {
             $client = new nusoap_client('https://sep.shaparak.ir/payments/referencepayment.asmx?WSDL', 'wsdl');
             $nuSoapProxy = $client->getProxy();
-            $amount = $nuSoapProxy->VerifyTransaction($RefId, $merchant);
+            $amount = $nuSoapProxy->VerifyTransaction($RefId, $this->MerchantCode);
             // Payment in the bank has been successful
             // مبلغ پرداختی با مبلغ ارسالی مقایسه میشود
             if(isset($_POST['State']) && $_POST['State'] === 'OK' && $ResCode === '0') {
@@ -73,7 +73,7 @@ class SamanGateway
                 }
                 else {
                     // وقتی که مقدار پرداختی با ارسالی برابر نباشد برگشت و خطا
-                    $nuSoapProxy->ReverseTransaction($RefId, $merchant, $this->password, $amount);
+                    $nuSoapProxy->ReverseTransaction($RefId, $this->MerchantCode, $this->password, $amount);
                     $data = false;
 
                 }
@@ -87,6 +87,12 @@ class SamanGateway
         }
         return $data;
 
+    }
+    public function refundAmount($params)
+    {
+        $client = new nusoap_client('https://sep.shaparak.ir/payments/referencepayment.asmx?WSDL', 'wsdl');
+        $nuSoapProxy = $client->getProxy();
+        $nuSoapProxy->ReverseTransaction($params['RefNum'], $this->MerchantCode, $this->password, $params['Amount']);
     }
 
     /**

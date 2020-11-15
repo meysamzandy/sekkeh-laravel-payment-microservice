@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper\JwtHelper;
 use App\Http\Helper\MellatGateway;
+use App\Http\Helper\SamanGateway;
 use App\Http\Helper\ValidatorHelper;
 use App\Models\ForceGateway;
 use App\Models\TransactionLog;
@@ -62,9 +63,16 @@ class TransactionLogController extends Controller
         ];
         try {
             $insertResult = TransactionLog::query()->create($data);
-            return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
-                ->startPayment($insertResult['price'],$insertResult['id']);
+            if ($data['final_gateway'] === 'mellat') {
+                return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
+                    ->startPayment($insertResult['price'],$insertResult['id']);
+            }
+            if ($data['final_gateway'] === 'saman') {
+                return (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')))
+                    ->startPayment($insertResult['price'],$insertResult['id']);
+            }
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }
 

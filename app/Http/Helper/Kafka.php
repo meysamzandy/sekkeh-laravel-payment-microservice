@@ -53,8 +53,14 @@ class Kafka
                     $transactionInfo = TransactionLog::query()->findOrFail($transaction['payment_id']);
                     $transactionInfo->update(['status'=>'failed', 'error_message'=> $e->getMessage()]);
                     // refund user payment amount
-                    $mellat = (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')));
-                    $mellat->refundAmount($calBackData);
+                    if ($transaction['final_gateway'] === 'mellat') {
+                        $mellat = (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')));
+                        $mellat->refundAmount($calBackData);
+                    }
+                    if ($transaction['final_gateway'] === 'saman') {
+                        $saman = (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')));
+                        $saman->refundAmount($calBackData);
+                    }
                 }
                 return $e->getCode();
             }

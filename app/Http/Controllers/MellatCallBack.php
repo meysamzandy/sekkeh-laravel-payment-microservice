@@ -28,32 +28,33 @@ class MellatCallBack
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFoundSaleOrderId')])->setStatusCode(400);
         }
 
-        $transaction = TransactionLog::query()->findOrFail($calBackData['SaleOrderId']);
-        if (!$transaction) {
+        $transactions = TransactionLog::query()->findOrFail($calBackData['SaleOrderId']);
+        /** @var TransactionLog $transactions */
+        if (!$transactions) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFound')])->setStatusCode(404);
         }
         $results = $mellat->checkPayment($calBackData);
 
         if (!($results)) {
-            $transaction->update(['status'=>'failed']);
-            $transactionsData = $this->preferTransactionData($transaction);
+            $transactions->update(['status'=>'failed']);
+            $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData);
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.failed')])->setStatusCode(400);
         }
 
         try {
-            $transaction->update(['status'=>'success', 'transaction_id'=> $calBackData['SaleReferenceId']]);
-            $transactionsData = $this->preferTransactionData($transaction);
+            $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['SaleReferenceId']]);
+            $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData,$calBackData);
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.success')])->setStatusCode(200);
 
         } catch (Exception $e) {
             // set failed payment status
-            $transaction->update(['status'=>'failed', 'error_message'=> $e->getMessage()]);
+            $transactions->update(['status'=>'failed', 'error_message'=> $e->getMessage()]);
             // refund user payment amount
             $mellat->refundAmount($calBackData);
             // send to kafka
-            $transactionsData = $this->preferTransactionData($transaction);
+            $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData);
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.exceptionError')])->setStatusCode(417);
         }
