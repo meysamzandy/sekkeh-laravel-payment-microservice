@@ -3,6 +3,8 @@
 namespace Tests\Unit;
 
 use App\Http\Helper\ValidatorHelper;
+use App\Models\ForceGateway;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class ValidatorHelperTest extends TestCase
@@ -51,5 +53,39 @@ class ValidatorHelperTest extends TestCase
         ];
         $result = (new ValidatorHelper())->dataValidator($data);
         self::assertTrue($result->passes());
+    }
+
+    public function testForceGatewayValidator()
+    {
+        Artisan::call('migrate:fresh');
+        // empty
+        $data = [];
+        $result =(new ValidatorHelper())->forceGatewayValidator($data);
+        self::assertFalse($result->passes());
+        // not valid
+        $data = [
+            'source' => 'sss',
+            'gateway' => 'sss'
+        ];
+        $result =(new ValidatorHelper())->forceGatewayValidator($data);
+        self::assertFalse($result->passes());
+
+
+        //valid gateway
+        $data = [
+            'source' => 'dakkeh',
+            'gateway' => 'saman',
+        ];
+        $result = (new ValidatorHelper())->forceGatewayValidator($data);
+        self::assertTrue($result->passes());
+
+        Artisan::call('migrate:refresh --seed --seeder=ForceGatewaySeeder');
+        //not unique source
+        $data = [
+            'source' => 'dakkeh',
+            'gateway' => 'saman',
+        ];
+        $result = (new ValidatorHelper())->forceGatewayValidator($data);
+        self::assertFalse($result->passes());
     }
 }

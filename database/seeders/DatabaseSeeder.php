@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        TransactionLog::factory(20);
-        ForceGateway::factory(2);
+        TransactionLog::factory(20)->create();
+        ForceGateway::factory(2)->create();
     }
 }

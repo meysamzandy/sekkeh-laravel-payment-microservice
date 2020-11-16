@@ -14,6 +14,6 @@ class ForceGatewaySeeder extends Seeder
      */
     public function run()
     {
-        ForceGateway::factory(2);
+        ForceGateway::factory(2)->create();
     }
 }

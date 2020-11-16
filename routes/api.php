@@ -30,8 +30,11 @@ Route::any('payment/saman/callback', [SamanCallBack::class,'callBack'])->name('s
 
 Route::group(['prefix' => '/admin/sekkeh/',  'middleware' => ['adminToken']], function()
 {
-    Route::get('list/transactions', [TransactionLogController::class,'list'] );
+    Route::get('transactions', [TransactionLogController::class,'list'] );
 
-    Route::get('list/forceGateways', [ForceGatewayController::class,'list'] );
+    Route::get('forceGateways', [ForceGatewayController::class,'list'] );
+    Route::post('forceGateways', [ForceGatewayController::class,'store'] );
+    Route::delete('forceGateways/{id}', [ForceGatewayController::class, 'destroy']);
+
 
 });

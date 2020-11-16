@@ -15,7 +15,7 @@ class CreateForceGatewaysTable extends Migration
     {
         Schema::create('force_gateways', function (Blueprint $table) {
             $table->id();
-            $table->string('source',45);
+            $table->string('source',45)->unique();
             $table->string('gateway',45);
             $table->timestamps();
         });

@@ -43,4 +43,23 @@ class ValidatorHelper
 
             ]);
     }
+
+    /**
+     * @param $data
+     * @return \Illuminate\Contracts\Validation\Validator
+     */
+    public function forceGatewayValidator($data): \Illuminate\Contracts\Validation\Validator
+    {
+        return Validator::make($data,
+            [
+                'source' => 'required|in:dakkeh,gisheh|unique:force_gateways',
+                'gateway' => 'required|in:saman,mellat',
+            ]
+            , [
+                'required' => __('messages.required'),
+                'in' => __('messages.in'),
+                'unique' => __('messages.unique'),
+
+            ]);
+    }
 }

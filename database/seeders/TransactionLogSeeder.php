@@ -14,6 +14,6 @@ class TransactionLogSeeder extends Seeder
      */
     public function run()
     {
-        TransactionLog::factory(20);
+        TransactionLog::factory(20)->create();
     }
 }

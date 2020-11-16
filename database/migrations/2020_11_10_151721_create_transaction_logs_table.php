@@ -22,7 +22,7 @@ class CreateTransactionLogsTable extends Migration
             $table->string('final_gateway',45);
             $table->string('status',45)->default('init');
             $table->string('transaction_id')->nullable();
-            $table->string('error_message')->nullable();
+            $table->text('error_message')->nullable();
             $table->timestamps();
         });
     }

@@ -1,5 +1,5 @@
 ## Sekkeh Installation Tips
-Sekeh is a payment microservice for filmgardi.com
+sekkeh is a payment microservice for filmgardi.com
 
 ### Requirements installation
 

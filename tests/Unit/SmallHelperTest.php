@@ -12,7 +12,13 @@ use Tests\TestCase;
 class SmallHelperTest extends TestCase
 {
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        Artisan::call('migrate');
+        Artisan::call('db:seed --class="DatabaseSeeder"');
 
+    }
     public function testReturnStatus(): void
     {
         $return = SmallHelper::returnStatus(true, 200, 'test', 'test message');
@@ -81,7 +87,6 @@ class SmallHelperTest extends TestCase
 
     public function testFetchList(): void
     {
-        Artisan::call('migrate:refresh --seed --seeder=DatabaseSeeder');
 
         //// has no data
         $request = new Request(['page' => 30 , 'limit' => 300], $_GET, [], [], [], []);
@@ -142,7 +147,5 @@ class SmallHelperTest extends TestCase
         $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);
         self::assertTrue($data['resultStats']);
         self::assertEquals(200,$data['statusCode']);
-        self::assertEquals(1,$data['body'][0]['id']);
-        self::assertNull($data['body'][1]);
     }
 }

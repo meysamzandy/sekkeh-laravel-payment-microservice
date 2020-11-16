@@ -31,6 +31,9 @@ return [
     'notFound' => 'تراکنش یافت نشد',
     'failed' => 'تراکنش موفقیت آمیز نبود.',
     'success' => 'تراکنش موفقیت آمیز بود.',
+    'deletion_successful' => 'با موفقیت حذف شد.',
+    'created_successful' => 'با موفقیت ایجاد شد.',
+
 
 
 ];

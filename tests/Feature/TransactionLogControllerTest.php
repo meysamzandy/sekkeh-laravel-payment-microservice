@@ -10,14 +10,65 @@ use Tests\TestCase;
 class TransactionLogControllerTest extends TestCase
 {
     public const REQUEST_URL = 'api/payment/request';
+    public const LIST_TRANSACTIONS = 'api/admin/sekkeh/transactions';
+
     public function setUp(): void
     {
         parent::setUp();
         Artisan::call('migrate:refresh --seed --seeder=DatabaseSeeder');
     }
+
+    public function testList()
+    {
+        // check if wrong url
+        $url = 'self::LIST_TRANSACTIONS';
+        $response = $this->get($url);
+        $response->assertStatus(404);
+
+        // check if token doesn't exist
+        $url = self::LIST_TRANSACTIONS;
+        $response = $this->get($url);
+        $response->assertStatus(403);
+
+        // check list without params
+        $url = self::LIST_TRANSACTIONS;
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(20, $data['body']['total']);
+
+        // check list with page and limit params
+        $url = self::LIST_TRANSACTIONS . '?page=1&limit=1';
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(20, $data['body']['last_page']);
+        self::assertEquals(20, $data['body']['total']);
+
+        // check list with page and limit params
+        $url = self::LIST_TRANSACTIONS . '?page=1&limit=10&id=1&op_id==';
+        $this->withoutMiddleware();
+        $request = $this->get($url);
+        $request->assertStatus(200);
+        $request->assertExactJson(json_decode($request->getContent(), true));
+        $data = json_decode($request->getContent(), true);
+        self::assertEquals(1, $data['body']['data'][0]['id']);
+        self::assertEquals(1, $data['body']['current_page']);
+        self::assertEquals(1, $data['body']['last_page']);
+        self::assertEquals(1, $data['body']['total']);
+
+    }
+
+
     public function testPaymentRequest()
     {
-// check if wrong url
+        // check if wrong url
         $url = 'self::REQUEST_URL';
         $response = $this->post($url);
         $response->assertStatus(404);
@@ -136,6 +187,21 @@ class TransactionLogControllerTest extends TestCase
         $jwt = JwtHelper::encodeJwt(config('settings.dakkeh_jwt.key'), $tokenData, 360000) ;
         $data = [
             'gateway' => 'saman',
+            'token' => $jwt,
+        ];
+        $request = $this->post($url,$data);
+        $request->assertSessionHasNoErrors();
+
+        $url = self::REQUEST_URL;
+        $this->withoutMiddleware();
+        $tokenData = [
+            'factorId' => 193,
+            'finalPrice' => 10000,
+            'src' => 'dakkeh',
+        ];
+        $jwt = JwtHelper::encodeJwt(config('settings.dakkeh_jwt.key'), $tokenData, 360000) ;
+        $data = [
+            'gateway' => 'mellat',
             'token' => $jwt,
         ];
         $request = $this->post($url,$data);
