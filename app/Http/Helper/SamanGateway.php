@@ -99,7 +99,7 @@ class SamanGateway
      * @param $number
      * @return string
      */
-    protected function error($number): string
+    public function error($number): string
     {
         return $this->response($number);
     }

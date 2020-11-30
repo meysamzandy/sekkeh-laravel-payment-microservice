@@ -136,7 +136,7 @@ class MellatGateway
      * @param $params
      * @return mixed|array|bool|string
      */
-    protected function verifyPayment($params)
+    public function verifyPayment($params)
     {
         $outPut = false;
         $client = new nusoap_client( 'https://bpm.shaparak.ir/pgwchannel/services/pgw?wsdl' ) ;
@@ -221,7 +221,7 @@ class MellatGateway
      * @param $number
      * @return string
      */
-    protected function error($number): string
+    public function error($number): string
     {
         return $this->response($number);
     }
