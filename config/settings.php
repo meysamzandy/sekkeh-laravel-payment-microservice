@@ -10,7 +10,7 @@ return [
 
     // dakkeh key
     'dakkeh_jwt' =>[
-        'key' => 'ujbnjeccb#*apzbxkwj&t%786!&b3hw7q%',
+        'key' => 'Pg)mg/E>H`e49bC)5#f$>tbgZTv.29eDp}.dJPH%',
     ],
 
     // saman gateway
