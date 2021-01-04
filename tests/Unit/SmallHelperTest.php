@@ -110,7 +110,7 @@ class SmallHelperTest extends TestCase
 
         $requestParams = (new TransactionLog())->getParams();
         self::assertIsArray( $requestParams);
-        self::assertEquals(["id","sales_id","price","source","selected_gateway","final_gateway","status","transaction_id","error_message","created_at","updated_at",], $requestParams);
+        self::assertEquals(["id","sales_id","price","alias","source","selected_gateway","final_gateway","status","transaction_id","error_message","created_at","updated_at",], $requestParams);
 
         $query = TransactionLog::query();
         $data = SmallHelper::fetchList($requestParams, $query, $request, $page, $limit, $orderColumn, $orderBy);

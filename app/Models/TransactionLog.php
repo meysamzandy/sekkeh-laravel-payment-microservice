@@ -23,7 +23,8 @@ class TransactionLog extends Model
         'final_gateway',
         'status',
         'transaction_id',
-        'error_message'
+        'error_message',
+        'alias'
     ];
 
     /**

@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Helper\Kafka;
 use App\Http\Helper\MellatGateway;
+use App\Http\Helper\SmallHelper;
 use App\Models\TransactionLog;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -25,13 +26,13 @@ class MellatCallBack
 
         // check if has SaleOrderId
         if (!$request->filled('SaleOrderId')) {
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFoundSaleOrderId')])->setStatusCode(400);
+            SmallHelper::redirectTransactionsResult(__('messages.notFoundSaleOrderId'),400);
         }
 
         $transactions = TransactionLog::query()->findOrFail($calBackData['SaleOrderId']);
         /** @var TransactionLog $transactions */
         if (!$transactions) {
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.notFound')])->setStatusCode(404);
+            SmallHelper::redirectTransactionsResult(__('messages.notFound'),404);
         }
         $results = $mellat->checkPayment($calBackData);
 
@@ -39,14 +40,15 @@ class MellatCallBack
             $transactions->update(['status'=>'failed']);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData);
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.failed')])->setStatusCode(400);
+            SmallHelper::redirectTransactionsResult(__('messages.failed'),400);
+//            return response()->json([self::BODY => null, self::MESSAGE => __('messages.failed')])->setStatusCode(400);
         }
 
         try {
             $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['SaleReferenceId']]);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData,$calBackData);
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.success')])->setStatusCode(200);
+            SmallHelper::redirectTransactionsResult(__('messages.success'),200);
 
         } catch (Exception $e) {
             // set failed payment status
@@ -56,7 +58,7 @@ class MellatCallBack
             // send to kafka
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData);
-            return response()->json([self::BODY => null, self::MESSAGE => __('messages.exceptionError')])->setStatusCode(417);
+            SmallHelper::redirectTransactionsResult(__('messages.exceptionError'),417);
         }
 
     }

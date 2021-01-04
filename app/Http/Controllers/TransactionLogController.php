@@ -31,20 +31,20 @@ class TransactionLogController extends Controller
 //        ];
 //        $jwt = JwtHelper::encodeJwt(config('settings.dakkeh_jwt.key'), $data, 360000) ;
 //        dd($jwt);
-
         if (!$request->filled('gateway')) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.gatewayValueNotExist')])->setStatusCode(400);
         }
         // if gateway is not valid
-        $dataValidator = (new ValidatorHelper)->dataValidator($request->post());
+        $dataValidator = (new ValidatorHelper)->dataValidator($request->query());
         if ($dataValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $dataValidator->errors()])->setStatusCode(400);
         }
-        if (!$request->filled('token')) {
+        if (!$request->header('token')) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.tokenValueNotExist')])->setStatusCode(400);
         }
+
         // decode token in data
-        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->input('token'));
+        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('token'));
 
         // check if token is not valid
         if (!$tokenData['result_status']) {
@@ -55,13 +55,14 @@ class TransactionLogController extends Controller
         if ($tokenValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $tokenValidator->errors()])->setStatusCode(400);
         }
-        $final_gateway = ForceGateway::query()->where('source',$tokenValidator->validated()['src'])->first('gateway');
 
+        $final_gateway = ForceGateway::query()->where('source',$tokenValidator->validated()['src'])->first('gateway');
 
         $data = [
                 'sales_id' => $tokenValidator->validated()['factorId'],
                 'price' => $tokenValidator->validated()['finalPrice'],
                 'source' => $tokenValidator->validated()['src'],
+                'alias' => $request->query('alias'),
                 'selected_gateway' => $dataValidator->validated()['gateway'],
                 'final_gateway' => $final_gateway ? $final_gateway['gateway']: $dataValidator->validated()['gateway'],
         ];

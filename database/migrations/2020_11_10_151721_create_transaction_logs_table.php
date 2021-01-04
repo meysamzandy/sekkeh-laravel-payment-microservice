@@ -17,6 +17,7 @@ class CreateTransactionLogsTable extends Migration
             $table->id('id')->comment('factor id');
             $table->bigInteger('sales_id');
             $table->unsignedInteger('price');
+            $table->char('alias')->nullable();
             $table->string('source',45);
             $table->string('selected_gateway',45);
             $table->string('final_gateway',45);

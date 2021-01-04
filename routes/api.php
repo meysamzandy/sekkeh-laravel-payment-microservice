@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('payment/request', [TransactionLogController::class, 'paymentRequest']);
+Route::get('payment/request', [TransactionLogController::class, 'paymentRequest']);
 
 Route::any('payment/mellat/callback', [MellatCallBack::class,'callBack'])->name('mellat_callback');
 Route::any('payment/saman/callback', [SamanCallBack::class,'callBack'])->name('saman_callback');

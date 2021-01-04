@@ -90,4 +90,11 @@ class SmallHelper
         ];
 
     }
+
+    public static function redirectTransactionsResult($message, $status, $transaction_id = NULL, $alias = NULL) {
+        header('HTTP/1.1 307 Temporary Redirect');
+        //    header('Location: http://31.184.135.251/payment/result?transaction_id='.$transaction_id.'&message='.$message.'&status='.$status);
+        header('Location: https://filmgardi.com/payment/result?transaction_id=' . $transaction_id . '&message=' . $message . '&status=' . $status. '&alias=' . $alias);
+        exit;
+    }
 }
