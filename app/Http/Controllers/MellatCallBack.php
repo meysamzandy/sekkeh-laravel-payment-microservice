@@ -48,7 +48,7 @@ class MellatCallBack
             $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['SaleReferenceId']]);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData,$calBackData);
-            SmallHelper::redirectTransactionsResult(__('messages.success'),200);
+            SmallHelper::redirectTransactionsResult(__('messages.success'),200, $calBackData['SaleReferenceId'],$transactions['alias']);
 
         } catch (Exception $e) {
             // set failed payment status

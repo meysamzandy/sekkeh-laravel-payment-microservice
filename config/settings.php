@@ -28,6 +28,8 @@ return [
         'callback' => env('APP_URL', 'https://sekkeh.filmgardi.com') . '/api/payment/mellat/callback'
     ],
 
+    'redirect_url' => 'https://filmgardi.com/payment/result'
+
 
 
 ];

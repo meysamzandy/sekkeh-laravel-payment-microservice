@@ -47,7 +47,7 @@ class SamanCallBack
             $transactions->update(['status'=>'success', 'transaction_id'=> $calBackData['TRACENO']]);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData,$calBackData);
-            SmallHelper::redirectTransactionsResult(__('messages.success'),200);
+            SmallHelper::redirectTransactionsResult(__('messages.success'),200,$calBackData['TRACENO'],$transactions['alias']);
 //            return response()->json([self::BODY => null, self::MESSAGE => __('messages.success')])->setStatusCode(200);
 
         } catch (Exception $e) {
