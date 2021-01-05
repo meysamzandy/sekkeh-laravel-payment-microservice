@@ -18,7 +18,7 @@ class ValidatorHelper
             [
                 'factorId' => 'required|numeric',
                 'finalPrice' => 'required|numeric',
-                'src' => 'required|in:dakkeh,gisheh',
+                'src' => 'required|in:dakkeh,gishe',
             ]
             , [
                 'required' => __('messages.required'),
@@ -52,7 +52,7 @@ class ValidatorHelper
     {
         return Validator::make($data,
             [
-                'source' => 'required|in:dakkeh,gisheh|unique:force_gateways',
+                'source' => 'required|in:dakkeh,gishe|unique:force_gateways',
                 'gateway' => 'required|in:saman,mellat',
             ]
             , [

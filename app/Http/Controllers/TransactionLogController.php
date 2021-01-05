@@ -57,7 +57,6 @@ class TransactionLogController extends Controller
         }
 
         $final_gateway = ForceGateway::query()->where('source',$tokenValidator->validated()['src'])->first('gateway');
-
         $data = [
                 'sales_id' => $tokenValidator->validated()['factorId'],
                 'price' => $tokenValidator->validated()['finalPrice'],
@@ -76,6 +75,7 @@ class TransactionLogController extends Controller
                 return (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')))
                     ->startPayment($insertResult['price'],$insertResult['id']);
             }
+
         } catch (\Exception $e) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }

@@ -14,12 +14,12 @@ use Kafka\ProducerConfig;
 class Kafka
 {
     public static function SyncNewTransactionToKafka($transaction,$calBackData = null) {
+
         $data ['transaction'] = $transaction;
         try {
             $config = ProducerConfig::getInstance();
             $config->setMetadataRefreshIntervalMs(10000);
-            // todo replace with new Producer
-            $config->setMetadataBrokerList('192.168.99.11:9092,192.168.99.12:9092,192.168.99.13:9092');
+            $config->setMetadataBrokerList(config('settings.kafka_ip'));
             $config->setBrokerVersion('1.0.0');
             $config->setRequiredAck(1);
             $config->setIsAsyn(FALSE);
@@ -36,11 +36,10 @@ class Kafka
             $Url = null ;
             $option = null;
             if ($transaction['source'] === 'dakkeh') {
-
-                $Url = 'http://192.168.81.160/api/v1/factor/update/'.$transaction['sales_id'];
+                $Url = config('settings.dakkeh_jwt.callback_url') .'/api/v1/factor/update/'.$transaction['sales_id'];
                 $option = [
                     'json' => [
-                        "sekkehId" => $transaction['id'],
+                        "sekkehId" => $transaction['payment_id'],
                         "transactionId" => $transaction['transaction_id'],
                         "gateway" => $transaction['final_gateway'],
                         "factorStatus" =>$transaction['status'],
@@ -51,15 +50,18 @@ class Kafka
                     ]
                 ];
             }
-            if ($transaction['source'] === 'gisheh') {
-                // todo replace with dakeh
-                $Url = 'http://127.0.0.1/cinessma/store';
+            if ($transaction['source'] === 'gishe') {
+                $Url = config('settings.gishe.callback_url') .'/gishe/api/v1/factor/'.$transaction['sales_id'].'/callback';
                 $option = [
                     'json' => [
-                        "sekkehId" => 25025,
+                        "sekkehId" => $transaction['payment_id'],
+                        "transactionId" => $transaction['transaction_id'],
+                        "gateway" => $transaction['final_gateway'],
+                        "factorStatus" =>$transaction['status'],
+                        "source" =>"api"
                     ],
                     'headers' =>[
-                        'Authorization' => JwtHelper::encodeJwt(config('settings.dakkeh_jwt.key'),'',60)
+                        'token' => JwtHelper::encodeJwt(config('settings.gishe.key'),['noting'],60)
                     ]
                 ];
             }

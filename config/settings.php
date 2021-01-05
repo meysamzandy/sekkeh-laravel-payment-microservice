@@ -11,6 +11,12 @@ return [
     // dakkeh key
     'dakkeh_jwt' =>[
         'key' => 'Pg)mg/E>H`e49bC)5#f$>tbgZTv.29eDp}.dJPH%',
+        'callback_url' => 'http://192.168.81.160'
+    ],
+    //sekkeh
+    'gishe' => [
+        'key' => 't3GdT78H8L8*V%4J%5B!cSS797u',
+        'callback_url' => 'http://192.168.81.70'
     ],
 
     // saman gateway
@@ -28,7 +34,9 @@ return [
         'callback' => env('APP_URL', 'https://sekkeh.filmgardi.com') . '/api/payment/mellat/callback'
     ],
 
-    'redirect_url' => 'https://filmgardi.com/payment/result'
+    'redirect_url' => 'https://filmgardi.com/payment/result',
+
+    'kafka_ip' => '192.168.99.11:9092,192.168.99.12:9092,192.168.99.13:9092'
 
 
 
