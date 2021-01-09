@@ -35,16 +35,16 @@ class TransactionLogController extends Controller
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.gatewayValueNotExist')])->setStatusCode(400);
         }
         // if gateway is not valid
-        $dataValidator = (new ValidatorHelper)->dataValidator($request->query());
+        $dataValidator = (new ValidatorHelper)->dataValidator($request->post());
         if ($dataValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $dataValidator->errors()])->setStatusCode(400);
         }
-        if (!$request->header('token')) {
+        if (!$request->header('payment_token')) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.tokenValueNotExist')])->setStatusCode(400);
         }
 
         // decode token in data
-        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('token'));
+        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('payment_token'));
 
         // check if token is not valid
         if (!$tokenData['result_status']) {
@@ -67,19 +67,24 @@ class TransactionLogController extends Controller
         ];
         try {
             $insertResult = TransactionLog::query()->create($data);
-            if ($data['final_gateway'] === 'mellat') {
-                return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
-                    ->startPayment($insertResult['price'],$insertResult['id']);
-            }
-            if ($data['final_gateway'] === 'saman') {
-                return (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')))
-                    ->startPayment($insertResult['price'],$insertResult['id']);
-            }
+            return response()->json([self::BODY => ['factor_id'=>$insertResult['id']], self::MESSAGE => null ])->setStatusCode(201);
 
         } catch (\Exception $e) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
         }
 
+    }
+
+    public function paymentCall(TransactionLog $id)
+    {
+        if ($id['final_gateway'] === 'mellat') {
+            return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
+                ->startPayment($id['price'],$id['id']);
+        }
+        if ($id['final_gateway'] === 'saman') {
+            return (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')))
+                ->startPayment($id['price'],$id['id']);
+        }
     }
 
 
