@@ -24,6 +24,7 @@ class SamanCallBack
         $saman = (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')));
         $calBackData = $request->post();
 
+
         // check if has ResNum
         if (!$request->filled('ResNum')) {
             SmallHelper::redirectTransactionsResult(__('messages.notFoundResNum'),400);
@@ -36,11 +37,11 @@ class SamanCallBack
         }
         $results = $saman->verifyPayment($calBackData);
 
-        if (!($results)) {
+        if ($results !== true) {
             $transactions->update(['status'=>'failed']);
             $transactionsData = $this->preferTransactionData($transactions);
             Kafka::SyncNewTransactionToKafka($transactionsData);
-            SmallHelper::redirectTransactionsResult(__('messages.failed'),400);
+            SmallHelper::redirectTransactionsResult($results,400);
         }
 
         try {

@@ -185,6 +185,7 @@ class MellatGateway
                         'RefId' => $params['RefId'],
                         'ResCode' => $params['ResCode'],
                     ];
+                    $outPut = false;
                 }
 
 
