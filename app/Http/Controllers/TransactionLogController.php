@@ -44,7 +44,7 @@ class TransactionLogController extends Controller
         }
 
         // decode token in data
-        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('payment_tokenpayment-token'));
+        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('payment-token'));
 
         // check if token is not valid
         if (!$tokenData['result_status']) {
