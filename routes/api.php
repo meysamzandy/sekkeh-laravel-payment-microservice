@@ -4,6 +4,7 @@ use App\Http\Controllers\ForceGatewayController;
 use App\Http\Controllers\MellatCallBack;
 use App\Http\Controllers\SamanCallBack;
 use App\Http\Controllers\TransactionLogController;
+use App\Models\TransactionLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('payment/request', [TransactionLogController::class, 'paymentRequest']);
 
-Route::get('payment/call/{id}', [TransactionLogController::class, 'paymentCall']);
+Route::get('payment/call/{factor_hash}', [TransactionLogController::class, 'paymentCall']);
+
 
 Route::any('payment/mellat/callback', [MellatCallBack::class,'callBack'])->name('mellat_callback');
 Route::any('payment/saman/callback', [SamanCallBack::class,'callBack'])->name('saman_callback');

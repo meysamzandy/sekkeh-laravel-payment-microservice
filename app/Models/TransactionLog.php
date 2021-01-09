@@ -17,6 +17,7 @@ class TransactionLog extends Model
      */
     protected $fillable = [
         'sales_id',
+        'factor_hash',
         'price',
         'source',
         'selected_gateway',

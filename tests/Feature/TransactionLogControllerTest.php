@@ -121,12 +121,11 @@ class TransactionLogControllerTest extends TestCase
 
         // check if  token us not valid
         $url = self::REQUEST_URL;
-        $this->withoutMiddleware();$data = [
+        $data = [
             'gateway' => 'saman',
-            'token' => 'ddddd',
         ];
         $request = $this->post($url,$data);
-        $request->assertStatus(403);
+        $request->assertStatus(400);
 
         // check if data in token us not valid
         $url = self::REQUEST_URL;

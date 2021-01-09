@@ -13,7 +13,9 @@ use App\Models\ForceGateway;
 use App\Models\TransactionLog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use function Illuminate\Support\Str;
 
 class TransactionLogController extends Controller
 {
@@ -58,16 +60,17 @@ class TransactionLogController extends Controller
 
         $final_gateway = ForceGateway::query()->where('source',$tokenValidator->validated()['src'])->first('gateway');
         $data = [
+                'factor_hash' => Str::random(8),
                 'sales_id' => $tokenValidator->validated()['factorId'],
                 'price' => $tokenValidator->validated()['finalPrice'],
                 'source' => $tokenValidator->validated()['src'],
-                'alias' => $request->query('alias'),
+                'alias' => $request->post('alias'),
                 'selected_gateway' => $dataValidator->validated()['gateway'],
                 'final_gateway' => $final_gateway ? $final_gateway['gateway']: $dataValidator->validated()['gateway'],
         ];
         try {
             $insertResult = TransactionLog::query()->create($data);
-            return response()->json([self::BODY => ['factor_id'=>$insertResult['id']], self::MESSAGE => null ])->setStatusCode(201);
+            return response()->json([self::BODY => ['factor_hash'=>$insertResult['factor_hash']], self::MESSAGE => null ])->setStatusCode(201);
 
         } catch (\Exception $e) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.public_error') ])->setStatusCode(400);
@@ -75,15 +78,16 @@ class TransactionLogController extends Controller
 
     }
 
-    public function paymentCall(TransactionLog $id)
+    public function paymentCall( $factor_hash)
     {
-        if ($id['final_gateway'] === 'mellat') {
+        $factor = TransactionLog::query()->where('factor_hash',$factor_hash)->firstOrFail();
+        if ($factor['final_gateway'] === 'mellat') {
             return (New MellatGateway(config('settings.mellat.terminal'),config('settings.mellat.username'),config('settings.mellat.password')))
-                ->startPayment($id['price'],$id['id']);
+                ->startPayment($factor['price'],$factor['id']);
         }
-        if ($id['final_gateway'] === 'saman') {
+        if ($factor['final_gateway'] === 'saman') {
             return (New SamanGateway(config('settings.saman.merchant'),config('settings.saman.password')))
-                ->startPayment($id['price'],$id['id']);
+                ->startPayment($factor['price'],$factor['id']);
         }
     }
 

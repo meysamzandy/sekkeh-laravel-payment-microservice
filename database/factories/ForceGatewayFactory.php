@@ -22,7 +22,7 @@ class ForceGatewayFactory extends Factory
     public function definition()
     {
         return [
-            'source' => $this->faker->unique()->randomElement(['dakkeh', 'gisheh']),
+            'source' => $this->faker->unique()->randomElement(['dakkeh', 'gishe']),
             'gateway' => $this->faker->randomElement(['saman', 'mellat']),
         ];
     }
