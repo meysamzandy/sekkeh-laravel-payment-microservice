@@ -24,7 +24,7 @@ return [
     'exceptionError' => 'هنگام ایجاد رکورد در دیتابیس خطایی رخ داده',
     'countOfCodeCreation' => 'تعداد :count کد در گروه  :group_name  باموفقیت ایجاد شد',
     'codeQueued' => 'تعداد :count کد در صف ارسال قرار گرفت. نتیجه عملیات ایجاد کد را در بخش گزارش ایجاد میتوانید ببینید.',
-    'tokenValueNotExist' => 'آبجکت payment-token یافت نشد',
+    'tokenValueNotExist' => 'آبجکت token یافت نشد',
     'gatewayValueNotExist' => 'آبجکت gateway یافت نشد',
     'public_error' => 'حطایی رخ داده، چند دقیقه بعد مجدد امتحان کنید. در صورت بروز مجدد خطا با پشتیبانی تماس حاصل فرمایید.',
     'notFoundSaleOrderId' => 'آبجکت SaleOrderId یافت نشد',

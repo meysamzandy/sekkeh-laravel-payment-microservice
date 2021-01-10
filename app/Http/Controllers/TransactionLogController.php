@@ -41,12 +41,12 @@ class TransactionLogController extends Controller
         if ($dataValidator->fails()) {
             return response()->json([self::BODY => null, self::MESSAGE => $dataValidator->errors()])->setStatusCode(400);
         }
-        if (!$request->header('payment-token')) {
+        if (!$request->header('token')) {
             return response()->json([self::BODY => null, self::MESSAGE => __('messages.tokenValueNotExist')])->setStatusCode(400);
         }
 
         // decode token in data
-        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('payment-token'));
+        $tokenData = JwtHelper::decodeJwt(config('settings.dakkeh_jwt.key'), $request->header('token'));
 
         // check if token is not valid
         if (!$tokenData['result_status']) {
