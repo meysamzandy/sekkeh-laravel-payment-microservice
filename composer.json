@@ -18,7 +18,8 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "mafzalzadeh/kafka-php": "^1.0",
-        "nowakowskir/php-jwt": "^2.0"
+        "nowakowskir/php-jwt": "^2.0",
+        "sentry/sentry-laravel": "^2.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
