@@ -22,7 +22,8 @@ return [
     //event1400
     'event1400' => [
         'key' => 'df4%6dT78HdL8*V%4J%5B!sckj79dg',
-        'callback_url' => 'http://192.168.90.10'
+        'callback_url' => 'http://192.168.90.10',
+        'redirect_url' => 'http://play.zing.school/payment/result'
     ],
 
     // saman gateway

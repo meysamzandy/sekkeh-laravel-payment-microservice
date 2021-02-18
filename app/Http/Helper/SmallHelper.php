@@ -91,9 +91,14 @@ class SmallHelper
 
     }
 
-    public static function redirectTransactionsResult($message, $status, $transaction_id = NULL, $alias = NULL) {
+    public static function redirectTransactionsResult($message, $status, $transaction_id = NULL, $alias = NULL,$source = null) {
         header('HTTP/1.1 307 Temporary Redirect');
-        header('Location: '.config('settings.redirect_url').'?transaction_id=' . $transaction_id . '&message=' . $message . '&status=' . $status. '&alias=' . $alias);
+        if ($source === 'event1400') {
+            header('Location: '.config('settings.event1400.redirect_url').'?transaction_id=' . $transaction_id . '&message=' . $message . '&status=' . $status. '&alias=' . $alias);
+        }else{
+
+            header('Location: '.config('settings.redirect_url').'?transaction_id=' . $transaction_id . '&message=' . $message . '&status=' . $status. '&alias=' . $alias);
+        }
         exit;
     }
 }
