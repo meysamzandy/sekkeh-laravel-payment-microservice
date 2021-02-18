@@ -19,6 +19,12 @@ return [
         'callback_url' => 'http://192.168.81.70'
     ],
 
+    //event1400
+    'event1400' => [
+        'key' => 'df4%6dT78HdL8*V%4J%5B!sckj79dg',
+        'callback_url' => 'http://192.168.90.10'
+    ],
+
     // saman gateway
     'saman' =>[
         'merchant' => '11812985',

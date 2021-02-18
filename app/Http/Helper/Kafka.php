@@ -65,6 +65,21 @@ class Kafka
                     ]
                 ];
             }
+            if ($transaction['source'] === 'event1400') {
+                $Url = config('settings.event1400.callback_url').'/api/subscription/callback/'.$transaction['sales_id'];
+                $option = [
+                    'json' => [
+                        "sekkehId" => $transaction['payment_id'],
+                        "transactionId" => $transaction['transaction_id'],
+                        "gateway" => $transaction['final_gateway'],
+                        "factorStatus" =>$transaction['status'],
+                        "source" =>"api"
+                    ],
+                    'headers' =>[
+                        'token' => JwtHelper::encodeJwt(config('settings.event1400.key'),['noting'],60)
+                    ]
+                ];
+            }
             try {
                 $client = new Client();
                 $request = $client->put($Url, $option);

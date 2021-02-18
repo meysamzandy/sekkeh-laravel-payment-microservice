@@ -18,7 +18,7 @@ class ValidatorHelper
             [
                 'factorId' => 'required|numeric',
                 'finalPrice' => 'required|numeric',
-                'src' => 'required|in:dakkeh,gishe',
+                'src' => 'required|in:dakkeh,gishe,event1400',
             ]
             , [
                 'required' => __('messages.required'),
