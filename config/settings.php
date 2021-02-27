@@ -41,7 +41,7 @@ return [
         'callback' => env('APP_URL', 'https://sekkeh.filmgardi.com') . '/api/payment/mellat/callback'
     ],
 
-    'redirect_url' => 'https://filmgardi.com/payment/result',
+    'redirect_url' => 'https://new.filmgardi.com/payment/result',
 
     'kafka_ip' => '192.168.99.11:9092,192.168.99.12:9092,192.168.99.13:9092'
 
