@@ -15,7 +15,7 @@ Set valid ip on the server<br>
 Set domain to valid ip `sekkeh.filmgardi.com`<br>
 Install ssl<br>
 ### Requirements Command
-run `git clone https://github.com/meysamzandy/sekkeh-gisheh-laravel-payment-microservice.git` <br>
+run `git clone https://github.com/meysamzandy/sekkeh-laravel-payment-microservice.git` <br>
 run `cd /var/www/sekkeh` <br>
 run `composer install` <br>
 Duplicate .env.example to .env <br>
