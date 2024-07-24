@@ -1,5 +1,5 @@
 ## Sekkeh Installation Tips
-sekkeh is a payment microservice for filmgardi.com
+sekkeh is a payment microservice
 
 ### Requirements installation
 
@@ -15,7 +15,7 @@ Set valid ip on the server<br>
 Set domain to valid ip `sekkeh.filmgardi.com`<br>
 Install ssl<br>
 ### Requirements Command
-run `git clone http://git.novincinema.com/ayeneh/sekkeh.git` <br>
+run `git clone https://github.com/meysamzandy/sekkeh-gisheh-laravel-payment-microservice.git` <br>
 run `cd /var/www/sekkeh` <br>
 run `composer install` <br>
 Duplicate .env.example to .env <br>
